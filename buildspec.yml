@@ -1,0 +1,30 @@
+version: 0.2
+
+phases:
+  install:
+    on-failure: ABORT  # Stop the build if the install phase fails
+    runtime-versions:
+      java: corretto17  # Specify the Java version to use
+    commands:
+      - echo Installing dependencies...  # Output message to indicate start of dependency installation
+      - cd java/GMA-Middleware
+      - pwd
+      - mvn clean install  # Install project dependencies and run tests; compile the code
+
+  build:
+    commands:
+      - echo Build started on `date`  # Output message with timestamp when build starts
+      - mvn test  # Run unit tests to ensure code quality and correctness
+
+  post_build:
+    commands:
+      - echo Build completed on `date`  # Output message with timestamp when build completes
+      - mvn package  # Package the application into a JAR file 
+      - echo Uploading JAR to S3...
+      - aws s3 cp target/*.jar s3://gmabluegreendeployementbucket/
+
+artifacts:
+  files:
+    - java/GMA-Middleware/target/*.jar  # Specify the path to the build artifact
+    - java/GMA-Middleware/appspec.yml
+  discard-paths: yes  # Preserve directory structure in the artifact

@@ -1,0 +1,10 @@
+version: 0.0
+Resources:
+  - GMA-lambda-Dev:
+      Type: AWS::Lambda::Function
+      Properties:
+        Name: "GMA-lambda-Dev" 
+        Alias: "DEV"
+        CurrentVersion: "1" 
+        TargetVersion: "2"
+       
